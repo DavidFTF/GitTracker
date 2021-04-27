@@ -1,5 +1,16 @@
 ﻿namespace GitTracker.Infrastructure.Helpers
 {
+    internal struct MimeTypes
+    {
+        internal const string ApplicationGitHub = "application/vnd.github.v3+json";
+    }
+
+    internal struct Headers
+    {
+        internal const string Accept = "accept";
+        internal const string UserAgent = "User-Agent";
+    }
+
     internal struct GitHubEndpoints
     {
         internal const string GetUser = "users/{Username}";

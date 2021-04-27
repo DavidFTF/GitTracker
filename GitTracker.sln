@@ -11,15 +11,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{AAA9338C-A2D8-43A9-8E3C-16484CD17E87}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitTracker.Domain", "GitTracker.Domain\GitTracker.Domain.csproj", "{264FFC4C-9DEB-47A1-AE30-4458AE10E65D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitTracker.Domain", "GitTracker.Domain\GitTracker.Domain.csproj", "{264FFC4C-9DEB-47A1-AE30-4458AE10E65D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitTracker.Services", "GitTracker.Services\GitTracker.Services.csproj", "{83FFC7EC-3162-4B3E-BB70-2266978A6CAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitTracker.Services", "GitTracker.Services\GitTracker.Services.csproj", "{83FFC7EC-3162-4B3E-BB70-2266978A6CAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitTracker.SharedKernel", "GitTracker.SharedKernel\GitTracker.SharedKernel.csproj", "{A84DCCDD-B3D2-43C7-A060-6E8C1AF85892}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitTracker.SharedKernel", "GitTracker.SharedKernel\GitTracker.SharedKernel.csproj", "{A84DCCDD-B3D2-43C7-A060-6E8C1AF85892}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitTracker.Infrastructure", "GitTracker.Infrastructure\GitTracker.Infrastructure.csproj", "{EBDD6F59-36B9-429B-BD83-255DF66BFDAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitTracker.Infrastructure", "GitTracker.Infrastructure\GitTracker.Infrastructure.csproj", "{EBDD6F59-36B9-429B-BD83-255DF66BFDAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitTracker.Repository", "GitTracker.Repository\GitTracker.Repository.csproj", "{8FE005FA-492E-4593-9F1C-F38E90689D97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitTracker.Repository", "GitTracker.Repository\GitTracker.Repository.csproj", "{8FE005FA-492E-4593-9F1C-F38E90689D97}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitTracker.Tests", "GitTracker.Tests\GitTracker.Tests.csproj", "{6B5DA8DD-2830-4FC8-A078-121227B92ECA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{8FE005FA-492E-4593-9F1C-F38E90689D97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8FE005FA-492E-4593-9F1C-F38E90689D97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8FE005FA-492E-4593-9F1C-F38E90689D97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B5DA8DD-2830-4FC8-A078-121227B92ECA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B5DA8DD-2830-4FC8-A078-121227B92ECA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B5DA8DD-2830-4FC8-A078-121227B92ECA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B5DA8DD-2830-4FC8-A078-121227B92ECA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +67,7 @@ Global
 		{A84DCCDD-B3D2-43C7-A060-6E8C1AF85892} = {86D9775C-8AF5-495D-B72C-337C5FF25FB2}
 		{EBDD6F59-36B9-429B-BD83-255DF66BFDAA} = {35A60270-F43D-4206-BAAD-CDF6670A967F}
 		{8FE005FA-492E-4593-9F1C-F38E90689D97} = {35A60270-F43D-4206-BAAD-CDF6670A967F}
+		{6B5DA8DD-2830-4FC8-A078-121227B92ECA} = {AAA9338C-A2D8-43A9-8E3C-16484CD17E87}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CE011330-F8F5-4965-89E7-FDFC9EC74D45}

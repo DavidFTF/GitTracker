@@ -3,5 +3,6 @@
     public interface IAppConfiguration
     {
         string GitHubUrl { get; }
+        string GitHubAgent { get; }
     }
 }
