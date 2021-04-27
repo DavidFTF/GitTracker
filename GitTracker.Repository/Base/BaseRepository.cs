@@ -12,13 +12,13 @@ namespace GitTracker.Repository.Base
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
-        private readonly IAppDbContext _context;
+        private readonly IAppDbContext _appDbContext;
         private readonly DbSet<T> _dbSet;
 
-        public BaseRepository(IAppDbContext context)
+        public BaseRepository(IAppDbContext appDbContext)
         {
-            _context = context;
-            _dbSet = context.Set<T>();
+            _appDbContext = appDbContext;
+            _dbSet = appDbContext.Set<T>();
         }
 
         public void Add(T entity)
@@ -34,7 +34,8 @@ namespace GitTracker.Repository.Base
         public T Update(T entity)
         {
             _dbSet.Attach(entity);
-            _context.Entry(entity).State = EntityState.Modified;
+            _appDbContext.Entry(entity).State = EntityState.Modified;
+
             return entity;
         }
 
@@ -50,23 +51,24 @@ namespace GitTracker.Repository.Base
 
         public virtual async Task RemoveAll()
         {
-            _context.Set<T>().RemoveRange(_context.Set<T>());
-            await _context.SaveChangesAsync();
+            _appDbContext.Set<T>().RemoveRange(_appDbContext.Set<T>());
+
+            await _appDbContext.SaveChangesAsync();
         }
 
         public void SaveChanges()
         {
-            _context.SaveChanges();
+            _appDbContext.SaveChanges();
         }
 
         public virtual async Task SaveChangesAsync()
         {
-            await _context.SaveChangesAsync();
+            await _appDbContext.SaveChangesAsync();
         }
 
         public virtual async Task SaveChangesAsync(CancellationToken cancellationToken)
         {
-            await _context.SaveChangesAsync(cancellationToken);
+            await _appDbContext.SaveChangesAsync(cancellationToken);
         }
 
         protected virtual IQueryable<T> AsQueryable()
