@@ -1,12 +1,13 @@
 using GitTracker.Infrastructure.Registrations;
 using GitTracker.Portal.Areas.Identity;
 using GitTracker.Portal.Data;
+using GitTracker.Repository.EntityFramework;
+using GitTracker.Repository.EntityFramework.Identity;
 using GitTracker.Repository.Registrations;
 using GitTracker.Services.Registrations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,19 +26,20 @@ namespace GitTracker.Portal
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("GitTrackerConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-
             services.RegisterInfrastructure();
             services.RegisterServices();
-            services.RegisterRepository();
+            services.RegisterRepository(Configuration.GetConnectionString("GitTrackerConnection"));
+
+            services.AddDefaultIdentity<ApplicationUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequiredLength = 8;
+            }).AddEntityFrameworkStores<AppDbContext>();
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+            services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
 
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddSingleton<WeatherForecastService>();
