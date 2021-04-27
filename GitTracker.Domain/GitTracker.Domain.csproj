@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GitTracker.SharedKernel\GitTracker.SharedKernel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Contracts\Infrastructure\" />
+    <Folder Include="Contracts\Services\" />
+    <Folder Include="Contracts\Repository\" />
+    <Folder Include="Entities\" />
+    <Folder Include="Helpers\" />
+  </ItemGroup>
+
+</Project>
