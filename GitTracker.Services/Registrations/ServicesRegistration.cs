@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using GitTracker.Domain.Contracts.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GitTracker.Services.Registrations
 {
@@ -6,8 +7,7 @@ namespace GitTracker.Services.Registrations
     {
         public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
-            // TODO: Add the services
-            //services.AddTransient<IService, Service>();
+            services.AddTransient<IAppConfiguration, AppConfiguration>();
 
             return services;
         }
