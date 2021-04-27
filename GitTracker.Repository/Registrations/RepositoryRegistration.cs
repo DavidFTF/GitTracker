@@ -1,13 +1,17 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using GitTracker.Repository.EntityFramework;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace GitTracker.Repository.Registrations
 {
     public static class RepositoryRegistration
     {
-        public static IServiceCollection RegisterRepository(this IServiceCollection services)
+        public static IServiceCollection RegisterRepository(this IServiceCollection services, string connectionString)
         {
-            // TODO: Add the services
-            //services.AddTransient<IService, Service>();
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(connectionString));
+            services.TryAddScoped<IAppDbContext, AppDbContext>();
 
             return services;
         }
