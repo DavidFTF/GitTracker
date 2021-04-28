@@ -44,6 +44,21 @@ namespace GitTracker.Infrastructure
             return response;
         }
 
+        public async Task<IList<GitHubRepositoryModel>> GetRepositories(string username)
+        {
+            var endPointModel = new EndPointModel
+            {
+                Username = username
+            };
+
+            string endPoint = await _endPointParser.ParseEndpoint(endPointModel, GitHubEndpoints.GetRepositories);
+
+            var response = await _flurlClient.Request(endPoint)
+                .GetJsonAsync<IList<GitHubRepositoryModel>>();
+
+            return response;
+        }
+
         public async Task<IList<GitHubBranchModel>> GetBranches(string username, string repository)
         {
             var endPointModel = new EndPointModel
