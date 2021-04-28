@@ -8,10 +8,4 @@
     <ProjectReference Include="..\GitTracker.SharedKernel\GitTracker.SharedKernel.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Contracts\Infrastructure\" />
-    <Folder Include="Contracts\Services\" />
-    <Folder Include="Helpers\" />
-  </ItemGroup>
-
 </Project>

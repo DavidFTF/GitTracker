@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Flurl.Http;
+using Flurl.Http.Configuration;
+using GitTracker.Domain.Contracts.Infrastructure;
+using GitTracker.Infrastructure.Helpers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GitTracker.Infrastructure.Registrations
 {
@@ -6,8 +10,11 @@ namespace GitTracker.Infrastructure.Registrations
     {
         public static IServiceCollection RegisterInfrastructure(this IServiceCollection services)
         {
-            // TODO: Add the services
-            //services.AddTransient<IService, Service>();
+            services.AddSingleton<IFlurlClient, FlurlClient>();
+
+            services.AddTransient<IEndPointParser, EndPointParser>();
+            services.AddTransient<ISerializer, FlurlJsonSerializer>();
+            services.AddTransient<IGitHubService, GitHubService>();
 
             return services;
         }
