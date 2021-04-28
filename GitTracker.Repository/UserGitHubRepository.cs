@@ -19,7 +19,7 @@ namespace GitTracker.Repository
             {
                 Id = userGitHub.ApplicationUserId,
                 DefaultRepository = userGitHub.DefaultRepository,
-                Owner = userGitHub.Ownder
+                Owner = userGitHub.Owner
             };
 
             Add(userGitHubEntity);

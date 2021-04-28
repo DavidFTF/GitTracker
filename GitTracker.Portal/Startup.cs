@@ -1,6 +1,5 @@
 using GitTracker.Infrastructure.Registrations;
 using GitTracker.Portal.Areas.Identity;
-using GitTracker.Portal.Data;
 using GitTracker.Repository.EntityFramework;
 using GitTracker.Repository.EntityFramework.Identity;
 using GitTracker.Repository.Registrations;
@@ -39,10 +38,10 @@ namespace GitTracker.Portal
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddHttpContextAccessor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
 
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddSingleton<WeatherForecastService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

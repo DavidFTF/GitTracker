@@ -4,5 +4,6 @@
     {
         string GitHubUrl { get; }
         string GitHubAgent { get; }
+        string GitHubDefaultUser { get; }
     }
 }
