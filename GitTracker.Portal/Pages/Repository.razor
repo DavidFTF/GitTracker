@@ -1,16 +1,49 @@
 ﻿@page "/repository"
 
 @using GitTracker.Domain.Contracts.Infrastructure
+@using GitTracker.Domain.Contracts.Services
 @using GitTracker.Domain.Models
+@using GitTracker.Domain.Helpers.Extensions
 @inject IGitHubService _gitHubService
+@inject IAppConfiguration _appConfiguration
+@inject AuthenticationStateProvider _authStateProvider
 
-<h1>Weather forecast</h1>
+<h1>Commits by Branch</h1>
 
-<p>This component demonstrates fetching data from a service.</p>
+<p>Select the repository and branch to use</p>
 
-@if (GitHubCommits == null)
+<div class="dropdown mb-3">
+    <button disabled="@(Repositories == null || Repositories.Count < 1)" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        @GitHubRepository
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        @if (Repositories != null)
+        {
+            @foreach (var repository in Repositories)
+            {
+                <button class="dropdown-item" type="button" @onclick="() => LoadBranches(repository)">@repository.Name</button>
+            }
+        }
+    </div>
+</div>
+<div class="dropdown mb-4">
+    <button disabled="@(Branches == null || Branches.Count < 1)" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        @GitHubBranch
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        @if (Branches != null)
+        {
+            foreach (var branch in Branches)
+            {
+                <button class="dropdown-item" type="button" @onclick="() => LoadCommits(branch)">@branch.Name</button>
+            }
+        }
+    </div>
+</div>
+
+@if (Commits == null || IsLoading)
 {
-    <p><em>Loading...</em></p>
+    <Loader BootstrapColor="text-loader"></Loader>
 }
 else
 {
@@ -27,15 +60,15 @@ else
                 </tr>
             </thead>
             <tbody>
-                @foreach (var GitHubCommit in GitHubCommits)
+                @foreach (var commit in Commits)
                 {
                     <tr>
-                        <td>@GitHubCommit.Commit?.Author?.Name</td>
-                        <td>@GitHubCommit.Commit?.Author?.Email</td>
-                        <td colspan="3">@GitHubCommit.Commit?.Message</td>
-                        <td>@GitHubCommit.Commit?.Author?.Date.ToShortDateString()</td>
-                        <td>@GitHubCommit.Sha</td>
-                        <td><a href="@GitHubCommit.Commit?.Url" target="_blank">View Commit</a></td>
+                        <td>@commit.Commit?.Author?.Name</td>
+                        <td>@commit.Commit?.Author?.Email</td>
+                        <td colspan="3">@commit.Commit?.Message</td>
+                        <td>@commit.Commit?.Author?.Date.ToShortDateString()</td>
+                        <td>@commit.Sha</td>
+                        <td><a href="@commit.Commit?.Url" target="_blank">View Commit</a></td>
                     </tr>
                 }
             </tbody>
@@ -47,17 +80,39 @@ else
     [CascadingParameter]
     public Error Error { get; set; }
 
-    private IList<GitHubCommitModel> GitHubCommits { get; set; } = null;
+    private IList<GitHubRepositoryModel> Repositories { get; set; }
+    private IList<GitHubBranchModel> Branches { get; set; }
+    private IList<GitHubCommitModel> Commits { get; set; }
+    private string GitHubUsername = null;
+    private string GitHubRepository = "Select Repo";
+    private string GitHubBranch = "Select Branch";
+    private bool IsLoading = false;
+
+    private async Task LoadBranches(GitHubRepositoryModel repository)
+    {
+        GitHubRepository = repository.Name;
+
+        Branches = await _gitHubService.GetBranches(GitHubUsername, repository.Name)
+            .RunWithErrorHandler(Error.ProcessError);
+    }
+
+    private async Task LoadCommits(GitHubBranchModel branch)
+    {
+        Commits = await _gitHubService.GetCommitsByBranch(GitHubUsername, GitHubRepository, branch.Name)
+            .RunWithErrorHandler(Error.ProcessError);
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        try
+        GitHubUsername = _appConfiguration.GitHubDefaultUser;
+
+        var authState = await _authStateProvider.GetAuthenticationStateAsync();
+
+        if (authState.User.Identity.IsAuthenticated)
         {
-            GitHubCommits = await _gitHubService.GetCommitsByBranch("DavidFTF", "GitTracker", "develop");
+            GitHubUsername = authState.User.Identity.Name;
         }
-        catch (Exception ex)
-        {
-            Error.ProcessError(ex);
-        }
+
+        Repositories = await _gitHubService.GetRepositories(GitHubUsername);
     }
 }
