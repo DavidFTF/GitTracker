@@ -1,0 +1,63 @@
+﻿@page "/repository"
+
+@using GitTracker.Domain.Contracts.Infrastructure
+@using GitTracker.Domain.Models
+@inject IGitHubService _gitHubService
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (GitHubCommits == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Author</th>
+                    <th>Email</th>
+                    <th colspan="3">Message</th>
+                    <th>Date</th>
+                    <th>SHA</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var GitHubCommit in GitHubCommits)
+                {
+                    <tr>
+                        <td>@GitHubCommit.Commit?.Author?.Name</td>
+                        <td>@GitHubCommit.Commit?.Author?.Email</td>
+                        <td colspan="3">@GitHubCommit.Commit?.Message</td>
+                        <td>@GitHubCommit.Commit?.Author?.Date.ToShortDateString()</td>
+                        <td>@GitHubCommit.Sha</td>
+                        <td><a href="@GitHubCommit.Commit?.Url" target="_blank">View Commit</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    [CascadingParameter]
+    public Error Error { get; set; }
+
+    private IList<GitHubCommitModel> GitHubCommits { get; set; } = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            GitHubCommits = await _gitHubService.GetCommitsByBranch("DavidFTF", "GitTracker", "develop");
+        }
+        catch (Exception ex)
+        {
+            Error.ProcessError(ex);
+        }
+    }
+}
