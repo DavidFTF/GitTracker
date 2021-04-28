@@ -4,6 +4,6 @@
     {
         public string ApplicationUserId { get; set; }
         public string DefaultRepository { get; set; }
-        public string Ownder { get; set; }
+        public string Owner { get; set; }
     }
 }

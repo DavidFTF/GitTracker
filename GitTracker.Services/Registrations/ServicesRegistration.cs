@@ -8,6 +8,7 @@ namespace GitTracker.Services.Registrations
         public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
             services.AddTransient<IAppConfiguration, AppConfiguration>();
+            services.AddTransient<IAccountService, AccountService>();
 
             return services;
         }
