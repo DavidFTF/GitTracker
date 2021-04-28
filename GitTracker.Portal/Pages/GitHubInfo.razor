@@ -1,14 +1,16 @@
 ﻿@page "/github-info"
 
 @using GitTracker.Domain.Contracts.Infrastructure
+@using GitTracker.Domain.Contracts.Services
 @using GitTracker.Domain.Models
 @inject IGitHubService _gitHubService
+@inject IAppConfiguration _appConfiguration
 
 <h1>GitHub Information</h1>
 
 @if (GitHubUserModel == null)
 {
-    <p><em>Loading...</em></p>
+    <Loader BootstrapColor="text-loader"></Loader>
 }
 else
 {
@@ -68,7 +70,7 @@ else
     {
         try
         {
-            GitHubUserModel = await _gitHubService.GetUserInfo("DavidFTF");
+            GitHubUserModel = await _gitHubService.GetUserInfo(_appConfiguration.GitHubDefaultUser);
         }
         catch (Exception ex)
         {

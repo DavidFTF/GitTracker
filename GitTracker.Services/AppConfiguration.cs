@@ -18,6 +18,7 @@ namespace GitTracker.Services
         public string GitHubUrl => GetValueOrDefault(nameof(GitHubUrl), @"https://api.github.com");
 
         public string GitHubAgent => GetValueOrDefault(nameof(GitHubAgent), @"GitTracker");
+        public string GitHubDefaultUser => GetValueOrDefault(nameof(GitHubDefaultUser), @"DavidFTF");
 
         protected List<string> GetSection(string appKey)
         {
