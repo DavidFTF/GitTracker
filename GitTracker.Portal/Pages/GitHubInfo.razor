@@ -68,13 +68,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            GitHubUserModel = await _gitHubService.GetUserInfo(_appConfiguration.GitHubDefaultUser);
-        }
-        catch (Exception ex)
-        {
-            Error.ProcessError(ex);
-        }
+        GitHubUserModel = await _gitHubService.GetUserInfo(_appConfiguration.GitHubDefaultUser)
+            .RunWithErrorHandler(Error.ProcessError);
     }
 }
