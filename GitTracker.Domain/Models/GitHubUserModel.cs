@@ -12,6 +12,8 @@ namespace GitTracker.Domain.Models
         public string AvatarUrl { get; set; }
         [JsonPropertyName("url")]
         public string Url { get; set; }
+        [JsonPropertyName("html_url")]
+        public string HomeUrl { get; set; }
         [JsonPropertyName("type")]
         public string UserType { get; set; }
         [JsonPropertyName("company")]
