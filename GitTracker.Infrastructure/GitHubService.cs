@@ -4,6 +4,7 @@ using GitTracker.Domain.Contracts.Infrastructure;
 using GitTracker.Domain.Contracts.Services;
 using GitTracker.Domain.Models;
 using GitTracker.Infrastructure.Helpers;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GitTracker.Infrastructure
@@ -43,47 +44,51 @@ namespace GitTracker.Infrastructure
             return response;
         }
 
-        public async Task<GitHubUserModel> GetBranches(string username)
+        public async Task<IList<GitHubBranchModel>> GetBranches(string username, string repository)
         {
             var endPointModel = new EndPointModel
             {
-                Username = username
+                Owner = username,
+                Repo = repository
             };
 
-            string endPoint = await _endPointParser.ParseEndpoint(endPointModel, GitHubEndpoints.GetUser);
+            string endPoint = await _endPointParser.ParseEndpoint(endPointModel, GitHubEndpoints.GetBranches);
 
             var response = await _flurlClient.Request(endPoint)
-                .GetJsonAsync<GitHubUserModel>();
+                .GetJsonAsync<IList<GitHubBranchModel>>();
 
             return response;
         }
 
-        public async Task<GitHubUserModel> GetCommits(string username)
+        public async Task<IList<GitHubCommitModel>> GetCommits(string username, string repository)
         {
             var endPointModel = new EndPointModel
             {
-                Username = username
+                Owner = username,
+                Repo = repository
             };
 
-            string endPoint = await _endPointParser.ParseEndpoint(endPointModel, GitHubEndpoints.GetUser);
+            string endPoint = await _endPointParser.ParseEndpoint(endPointModel, GitHubEndpoints.GetCommits);
 
             var response = await _flurlClient.Request(endPoint)
-                .GetJsonAsync<GitHubUserModel>();
+                .GetJsonAsync<IList<GitHubCommitModel>>();
 
             return response;
         }
 
-        public async Task<GitHubUserModel> GetCommitsByBranch(string username)
+        public async Task<IList<GitHubCommitModel>> GetCommitsByBranch(string username, string repository, string branch)
         {
             var endPointModel = new EndPointModel
             {
-                Username = username
+                Owner = username,
+                Repo = repository,
+                Sha = branch
             };
 
-            string endPoint = await _endPointParser.ParseEndpoint(endPointModel, GitHubEndpoints.GetUser);
+            string endPoint = await _endPointParser.ParseEndpoint(endPointModel, GitHubEndpoints.GetCommitsByBranch);
 
             var response = await _flurlClient.Request(endPoint)
-                .GetJsonAsync<GitHubUserModel>();
+                .GetJsonAsync<IList<GitHubCommitModel>>();
 
             return response;
         }

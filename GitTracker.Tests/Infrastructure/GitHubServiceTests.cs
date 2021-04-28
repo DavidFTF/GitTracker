@@ -39,7 +39,43 @@ namespace GitTracker.Tests.Infrastructure
             var gitHubService = new GitHubService(_flurlClient, _serializer, _endPointParser, _appConfiguration);
 
             // Act
-            _ = await gitHubService.GetUserInfo("pedritobata");
+            _ = await gitHubService.GetUserInfo("DavidFTF");
+
+            // Assert
+        }
+
+        [TestMethod]
+        public async Task GetBranches()
+        {
+            // Arrange
+            var gitHubService = new GitHubService(_flurlClient, _serializer, _endPointParser, _appConfiguration);
+
+            // Act
+            _ = await gitHubService.GetBranches("DavidFTF", "GitTracker");
+
+            // Assert
+        }
+
+        [TestMethod]
+        public async Task GetCommits()
+        {
+            // Arrange
+            var gitHubService = new GitHubService(_flurlClient, _serializer, _endPointParser, _appConfiguration);
+
+            // Act
+            _ = await gitHubService.GetCommits("DavidFTF", "GitTracker");
+
+            // Assert
+        }
+
+        [TestMethod]
+        public async Task GetCommitsByBranch()
+        {
+            // Arrange
+            var gitHubService = new GitHubService(_flurlClient, _serializer, _endPointParser, _appConfiguration);
+
+            // Act
+            _ = await gitHubService.GetCommitsByBranch("DavidFTF", "GitTracker", "develop");
 
             // Assert
         }

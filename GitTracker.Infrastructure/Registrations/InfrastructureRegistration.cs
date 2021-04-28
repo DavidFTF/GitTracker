@@ -10,9 +10,11 @@ namespace GitTracker.Infrastructure.Registrations
     {
         public static IServiceCollection RegisterInfrastructure(this IServiceCollection services)
         {
+            services.AddSingleton<IFlurlClient, FlurlClient>();
+
             services.AddTransient<IEndPointParser, EndPointParser>();
             services.AddTransient<ISerializer, FlurlJsonSerializer>();
-            services.AddSingleton<IFlurlClient, FlurlClient>();
+            services.AddTransient<IGitHubService, GitHubService>();
 
             return services;
         }
