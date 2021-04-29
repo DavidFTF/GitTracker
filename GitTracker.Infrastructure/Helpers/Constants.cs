@@ -11,12 +11,12 @@
         internal const string UserAgent = "User-Agent";
     }
 
-    internal struct GitHubEndpoints
+    public struct GitHubEndpoints
     {
-        internal const string GetUser = "users/{Username}";
-        internal const string GetRepositories = "users/{Username}/repos";
-        internal const string GetBranches = "repos/{Owner}/{Repo}/branches";
-        internal const string GetCommits = "repos/{Owner}/{Repo}/commits";
-        internal const string GetCommitsByBranch = "repos/{Owner}/{Repo}/commits?sha={Sha}";
+        public const string GetUser = "users/{Username}";
+        public const string GetRepositories = "users/{Username}/repos";
+        public const string GetBranches = "repos/{Owner}/{Repo}/branches";
+        public const string GetCommits = "repos/{Owner}/{Repo}/commits";
+        public const string GetCommitsByBranch = "repos/{Owner}/{Repo}/commits?sha={Sha}";
     }
 }
