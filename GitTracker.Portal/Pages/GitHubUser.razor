@@ -37,7 +37,7 @@ else
                     <label for="Repository">Repository</label>
                     <InputText class="form-control" id="Repository" @bind-Value="_userGitHubViewModel.DefaultRepository" />
                 </div>
-                <button type="submit" class="btn btn-success pr-3" disabled="@_isProcessing">
+                <button type="submit" class="btn btn-success pr-4" disabled="@_isProcessing">
                     <span class="spinner-border spinner-border-sm @(!_isProcessing ? "invisible" : string.Empty)" role="status" aria-hidden="true"></span>
                     <span class="sr-only">Loading...</span>
                     Save
