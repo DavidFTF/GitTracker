@@ -4,8 +4,8 @@
 @using Microsoft.AspNetCore.Identity
 @using GitTracker.Domain.Models
 @using GitTracker.Domain.Contracts.Services
+@using GitTracker.Domain.Helpers.Extensions
 @using GitTracker.Repository.EntityFramework.Identity;
-
 @inject IAccountService _accountService
 @inject UserManager<ApplicationUser> _userManager
 @inject AuthenticationStateProvider _authStateProvider
@@ -86,14 +86,14 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-
         var authState = await _authStateProvider.GetAuthenticationStateAsync();
 
         if (authState.User.Identity.IsAuthenticated)
         {
             var user = await _userManager.FindByNameAsync(authState.User.Identity.Name);
 
-            var gitHubInfo = await _accountService.GetGitHubInfo(user.Id);
+            var gitHubInfo = await _accountService.GetGitHubInfo(user.Id)
+                .RunWithErrorHandler(Error.ProcessError);
 
             _applicationUserId = user.Id;
 

@@ -2,10 +2,15 @@
 
 @using GitTracker.Domain.Contracts.Infrastructure
 @using GitTracker.Domain.Contracts.Services
-@using GitTracker.Domain.Helpers.Extensions
 @using GitTracker.Domain.Models
+@using GitTracker.Domain.Helpers.Extensions
+@using GitTracker.Repository.EntityFramework.Identity;
+@using Microsoft.AspNetCore.Identity
 @inject IGitHubService _gitHubService
+@inject IAccountService _accountService
 @inject IAppConfiguration _appConfiguration
+@inject UserManager<ApplicationUser> _userManager
+@inject AuthenticationStateProvider _authStateProvider
 
 <h1>GitHub Information</h1>
 
@@ -66,10 +71,26 @@ else
     public Error Error { get; set; }
 
     private GitHubUserModel GitHubUserModel { get; set; } = null;
+    private string GitHubUsername = null;
 
     protected override async Task OnInitializedAsync()
     {
-        GitHubUserModel = await _gitHubService.GetUserInfo(_appConfiguration.GitHubDefaultUser)
+        GitHubUsername = _appConfiguration.GitHubDefaultUser;
+
+        var authState = await _authStateProvider.GetAuthenticationStateAsync();
+
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            var user = await _userManager.FindByNameAsync(authState.User.Identity.Name);
+
+            var gitHubInfo = await _accountService.GetGitHubInfo(user.Id)
+                .RunWithErrorHandler(Error.ProcessError);
+
+            if (gitHubInfo != null)
+                GitHubUsername = gitHubInfo.Owner;
+        }
+
+        GitHubUserModel = await _gitHubService.GetUserInfo(GitHubUsername)
             .RunWithErrorHandler(Error.ProcessError);
     }
 }

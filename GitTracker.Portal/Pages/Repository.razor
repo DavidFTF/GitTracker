@@ -4,8 +4,12 @@
 @using GitTracker.Domain.Contracts.Services
 @using GitTracker.Domain.Models
 @using GitTracker.Domain.Helpers.Extensions
+@using GitTracker.Repository.EntityFramework.Identity;
+@using Microsoft.AspNetCore.Identity
 @inject IGitHubService _gitHubService
+@inject IAccountService _accountService
 @inject IAppConfiguration _appConfiguration
+@inject UserManager<ApplicationUser> _userManager
 @inject AuthenticationStateProvider _authStateProvider
 
 <h1>Commits by Branch</h1>
@@ -114,7 +118,13 @@ else
 
         if (authState.User.Identity.IsAuthenticated)
         {
-            GitHubUsername = authState.User.Identity.Name;
+            var user = await _userManager.FindByNameAsync(authState.User.Identity.Name);
+
+            var gitHubInfo = await _accountService.GetGitHubInfo(user.Id)
+                .RunWithErrorHandler(Error.ProcessError);
+
+            if (gitHubInfo != null)
+                GitHubUsername = gitHubInfo.Owner;
         }
 
         Repositories = await _gitHubService.GetRepositories(GitHubUsername);
