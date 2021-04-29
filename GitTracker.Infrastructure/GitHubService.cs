@@ -24,6 +24,7 @@ namespace GitTracker.Infrastructure
             _flurlClient = flurlClient;
 
             _flurlClient.BaseUrl = appConfiguration.GitHubUrl;
+            _flurlClient.AllowAnyHttpStatus();
             _flurlClient.WithHeader(Headers.Accept, MimeTypes.ApplicationGitHub);
             _flurlClient.WithHeader(Headers.UserAgent, appConfiguration.GitHubAgent);
             _flurlClient.Settings.JsonSerializer = serializer;
