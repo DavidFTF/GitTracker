@@ -1,0 +1,96 @@
+﻿@page "/github-info"
+
+@using GitTracker.Domain.Contracts.Infrastructure
+@using GitTracker.Domain.Contracts.Services
+@using GitTracker.Domain.Models
+@using GitTracker.Domain.Helpers.Extensions
+@using GitTracker.Repository.EntityFramework.Identity;
+@using Microsoft.AspNetCore.Identity
+@inject IGitHubService _gitHubService
+@inject IAccountService _accountService
+@inject IAppConfiguration _appConfiguration
+@inject UserManager<ApplicationUser> _userManager
+@inject AuthenticationStateProvider _authStateProvider
+
+<h1>GitHub Information</h1>
+
+@if (GitHubUserModel == null)
+{
+    <Loader BootstrapColor="text-loader"></Loader>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex flex-column align-items-center text-center">
+                        <img src="@GitHubUserModel.AvatarUrl" alt="@GitHubUserModel.Login" class="rounded-circle" width="150">
+                        <div class="mt-3">
+                            <h4>@GitHubUserModel.Login</h4>
+                            <p class="text-secondary mb-1">@GitHubUserModel.UserType</p>
+                            <a class="btn btn-primary" target="_blank" href="@GitHubUserModel.HomeUrl" role="button">See Profile</a>
+                            <a class="btn btn btn-outline-primary" target="_blank" href="@GitHubUserModel.Url" role="button">See Json</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Username</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary"> @GitHubUserModel.Login</div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Email</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary"> @GitHubUserModel.Email</div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Company</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary"> @GitHubUserModel.Company</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [CascadingParameter]
+    public Error Error { get; set; }
+
+    private GitHubUserModel GitHubUserModel { get; set; } = null;
+    private string GitHubUsername = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        GitHubUsername = _appConfiguration.GitHubDefaultUser;
+
+        var authState = await _authStateProvider.GetAuthenticationStateAsync();
+
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            var user = await _userManager.FindByNameAsync(authState.User.Identity.Name);
+
+            var gitHubInfo = await _accountService.GetGitHubInfo(user.Id)
+                .RunWithErrorHandler(Error.ProcessError);
+
+            if (gitHubInfo != null)
+                GitHubUsername = gitHubInfo.Owner;
+        }
+
+        GitHubUserModel = await _gitHubService.GetUserInfo(GitHubUsername)
+            .RunWithErrorHandler(Error.ProcessError);
+    }
+}

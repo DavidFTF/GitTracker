@@ -1,0 +1,16 @@
+﻿version: '3.6'
+services:
+  MSSQL-Server-2017:
+    image: microsoft/mssql-server-windows-express:2017-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Secur3*Pw*9821"
+      MSSQL_PID: Express
+    ports:
+      - "3433:1433"
+  gittracker-app:
+    build: .
+    ports: 
+      - "8090:80"
+    depends_on:
+      - MSSQL-Server-2017

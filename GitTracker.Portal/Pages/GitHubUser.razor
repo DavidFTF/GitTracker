@@ -1,0 +1,106 @@
+﻿@page "/Account/Manage/GitHubUser"
+
+@using GitTracker.Portal.ViewModels
+@using Microsoft.AspNetCore.Identity
+@using GitTracker.Domain.Models
+@using GitTracker.Domain.Contracts.Services
+@using GitTracker.Domain.Helpers.Extensions
+@using GitTracker.Repository.EntityFramework.Identity;
+@inject IAccountService _accountService
+@inject UserManager<ApplicationUser> _userManager
+@inject AuthenticationStateProvider _authStateProvider
+
+<h3 class="mb-4">Manage you GitHub account info</h3>
+
+@if (_isLoading)
+{
+    <Loader BootstrapColor="text-loader"></Loader>
+}
+else
+{
+    @if (!string.IsNullOrWhiteSpace(_message))
+    {
+        <AlertInline Title="@_message" Class="@_class"></AlertInline>
+    }
+
+    <div class="row">
+        <div class="col-lg-4 col-sm-6">
+            <EditForm Model="@_userGitHubViewModel" OnValidSubmit="@CreateGitHubInfo">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-group">
+                    <label for="Owner">Owner</label>
+                    <InputText class="form-control" id="Owner" @bind-Value="_userGitHubViewModel.Owner" />
+                </div>
+                <div class="form-group">
+                    <label for="Repository">Repository</label>
+                    <InputText class="form-control" id="Repository" @bind-Value="_userGitHubViewModel.DefaultRepository" />
+                </div>
+                <button type="submit" class="btn btn-success pr-4" disabled="@_isProcessing">
+                    <span class="spinner-border spinner-border-sm @(!_isProcessing ? "invisible" : string.Empty)" role="status" aria-hidden="true"></span>
+                    <span class="sr-only">Loading...</span>
+                    Save
+                </button>
+            </EditForm>
+        </div>
+    </div>
+
+}
+
+@code {
+    [CascadingParameter]
+    public Error Error { get; set; }
+
+    private UserGitHubViewModel _userGitHubViewModel = new UserGitHubViewModel();
+    private string _applicationUserId = string.Empty;
+    private string _message = string.Empty;
+    private string _class = "secondary";
+    private bool _isLoading = true;
+    private bool _isProcessing = false;
+
+    private async Task CreateGitHubInfo()
+    {
+        var userGitHubInfo = new UserGitHubModel
+        {
+            ApplicationUserId = _applicationUserId,
+            DefaultRepository = _userGitHubViewModel.DefaultRepository,
+            Owner = _userGitHubViewModel.Owner
+        };
+
+        _isProcessing = true;
+
+        if (await _accountService.AddGitHubInfo(userGitHubInfo))
+        {
+            _message = "GitHub Information Updated";
+            _class = "success";
+        }
+        else
+        {
+            _message = "GitHub User is Invalid";
+            _class = "danger";
+        }
+
+        _isProcessing = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await _authStateProvider.GetAuthenticationStateAsync();
+
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            var user = await _userManager.FindByNameAsync(authState.User.Identity.Name);
+
+            var gitHubInfo = await _accountService.GetGitHubInfo(user.Id)
+                .RunWithErrorHandler(Error.ProcessError);
+
+            _applicationUserId = user.Id;
+
+            if (gitHubInfo != null)
+                _userGitHubViewModel = new UserGitHubViewModel(gitHubInfo);
+        }
+
+        _isLoading = false;
+    }
+}
