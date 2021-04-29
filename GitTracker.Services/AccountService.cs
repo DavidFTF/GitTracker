@@ -2,6 +2,7 @@
 using GitTracker.Domain.Contracts.Repository;
 using GitTracker.Domain.Contracts.Services;
 using GitTracker.Domain.Models;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GitTracker.Services
@@ -25,12 +26,25 @@ namespace GitTracker.Services
 
             if (gitHubUser != null)
             {
-                await _userGitHubRepository.CreateUserGitHub(userGitHub);
+                var branches = await _gitHubService.GetRepositories(userGitHub.Owner);
+
+                if (!branches.Any(x => x.Name == userGitHub.DefaultRepository))
+                    userGitHub.DefaultRepository = string.Empty;
+
+                if (await _userGitHubRepository.GetUserGitHub(userGitHub.ApplicationUserId) == null)
+                    await _userGitHubRepository.CreateUserGitHub(userGitHub);
+                else
+                    await _userGitHubRepository.UpdateUserGitHub(userGitHub);
 
                 return true;
             }
             else
                 return false;
+        }
+
+        public async Task<UserGitHubModel> GetGitHubInfo(string applicationUserId)
+        {
+            return await _userGitHubRepository.GetUserGitHub(applicationUserId);
         }
     }
 }

@@ -98,8 +98,12 @@ else
 
     private async Task LoadCommits(GitHubBranchModel branch)
     {
+        IsLoading = true;
+
         Commits = await _gitHubService.GetCommitsByBranch(GitHubUsername, GitHubRepository, branch.Name)
             .RunWithErrorHandler(Error.ProcessError);
+
+        IsLoading = false;
     }
 
     protected override async Task OnInitializedAsync()

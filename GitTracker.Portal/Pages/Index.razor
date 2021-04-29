@@ -1,7 +1,10 @@
 ﻿@page "/"
 
+@using GitTracker.Domain.Contracts.Services
+@inject IAppConfiguration _appConfiguration
+
 <h1>GitTracker App</h1>
 
-The GitTracker App allows the users to review their GitHub's repositories
+The GitTracker App allows the users to review their GitHub's repositories, if no user is logged then the App will load the default GitHub user @_appConfiguration.GitHubDefaultUser
 
-<AlertInline Title="Register an account in order to review your GitHub information." Url="Identity/Account/Register" />
+<AlertInline Title="Register an account in order to review your GitHub information." Url="Identity/Account/Register" UrlMask="Register" Class="secondary" />

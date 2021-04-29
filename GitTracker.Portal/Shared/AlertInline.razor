@@ -1,15 +1,19 @@
-﻿<div class="alert alert-secondary mt-4" role="alert">
+﻿<div class="alert alert-@Class mt-4" role="alert">
     <span class="oi oi-person mr-2" aria-hidden="true"></span>
     @Title
 
     <span class="text-nowrap">
-        <a target="_blank" class="font-weight-bold" href="@Url">Open Url</a>
+        <a target="_blank" class="font-weight-bold" href="@Url">@UrlMask</a>
     </span>
 </div>
 
 @code {
     [Parameter]
+    public string Class { get; set; }
+    [Parameter]
     public string Title { get; set; }
     [Parameter]
     public string Url { get; set; }
+    [Parameter]
+    public string UrlMask { get; set; }
 }

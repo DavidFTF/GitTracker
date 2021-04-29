@@ -1,6 +1,9 @@
 ﻿<AuthorizeView>
     <Authorized>
         <a href="Identity/Account/Manage">Hello, @context.User.Identity.Name!</a>
+        <NavLink class="nav-link" href="Account/Manage/GitHubUser">
+            Edit GitHub Info
+        </NavLink>
         <form method="post" action="Identity/Account/LogOut">
             <button type="submit" class="nav-link btn btn-link">Log out</button>
         </form>
