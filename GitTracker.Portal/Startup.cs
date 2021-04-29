@@ -71,6 +71,10 @@ namespace GitTracker.Portal
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+
+            using var service = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            var context = service.ServiceProvider.GetService<AppDbContext>();
+            context.Database.Migrate();
         }
     }
 }
